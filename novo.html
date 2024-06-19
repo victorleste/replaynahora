@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replays</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="test.css">
+  <style>
+    .video-wrapper {
+      width: 50%;
+      box-sizing: border-box;
+      padding: 10px;
+      float: left;
+    }
+    .video-wrapper iframe {
+      width: 100%;
+      height: auto;
+    }
+    .custom-button {
+      background-color: #03FE0B;
+      color: #fff;
+      border: none;
+      padding: 8px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+    .custom-button:hover {
+      background-color: #0056b3;
+    }
+    
+    /* Estilos para o botão de download */
+    .download-button {
+      background-color: #03FE0B;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 2px;
+      text-decoration: none;
+    }
+
+    .download-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="header">
+      <h3>REPLAYS</h3>
+    </section>
+    <div class="content">
+      <div class="form">
+        <form id="form">
+          <div class="form-content dia-horario">
+            <label for="dia">Dia</label>
+            <select id="dia" name="dia">
+              <option value="">Selecione...</option>
+              <option value="segunda">Segunda</option>
+              <option value="terça">Terça-feira</option>
+              <option value="quarta">Quarta-feira</option>
+              <option value="quinta">Quinta-feira</option>
+              <option value="sexta">Sexta-feira</option>
+              <option value="sabado">Sábado</option>
+              <option value="domingo">Domingo</option>
+            </select>
+            <a class="error-message">Por favor, selecione um dia.</a>
+          </div>
+          <div class="form-content dia-horario">
+            <label for="horario">Horário</label>
+            <select id="horario" name="horario">
+              <option value="">Selecione...</option>
+              <option value="hora1">00h-01h</option>
+              <option value="hora2">01h-02h</option>
+              <option value="hora3">02h-03h</option>
+              <option value="hora4">03h-04h</option>
+              <option value="hora5">04h-05h</option>
+              <option value="hora6">05h-06h</option> 
+              <option value="hora7">06h-07h</option>
+              <option value="hora8">07h-08h</option>
+              <option value="hora9">08h-09h</option>
+              <option value="hora10">09h-10h</option>
+              <option value="hora11">10h-11h</option> 
+              <option value="hora12">11h-12h</option>
+              <option value="hora13">12h-13h</option>
+              <option value="hora14">13h-14h</option>
+              <option value="hora15">14h-15h</option>
+              <option value="hora16">15h-16h</option>
+              <option value="hora17">16h-17h</option>
+              <option value="hora18">17h-18h</option>
+              <option value="hora19">18h-19h</option>
+              <option value="hora20">19h-20h</option>
+              <option value="hora21">20h-21h</option>
+              <option value="hora22">21h-22h</option>
+              <option value="hora23">22h-23h</option>
+              <option value="hora24">23h-24h</option>
+            </select>
+            <a class="error-message">Por favor, selecione um horário.</a>
+          </div>
+          <button type="submit">Confirmar</button>
+        </form>
+      </div>
+      <div id="videos-container"></div>
+    </div>
+
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+      function carregarVideos(folderId) {
+          gapi.client.drive.files.list({
+              q: `'${folderId}' in parents and mimeType contains 'video/'`,
+              fields: 'files(id, name, webViewLink)',
+              pageSize: 200
+          }).then(response => {
+              const videosContainer = document.getElementById('videos-container');
+              videosContainer.innerHTML = '';
+              response.result.files.forEach(file => {
+                  const videoWrapper = document.createElement('div');
+                  videoWrapper.className = 'video-wrapper';
+                  const videoElement = document.createElement('iframe');
+                  videoElement.src = `https://drive.google.com/file/d/${file.id}/preview`;
+                  videoWrapper.appendChild(videoElement);
+                  
+                  // Botão para abrir em tela cheia
+                  const fullScreenButton = document.createElement('button');
+                  fullScreenButton.textContent = 'Assistir replay';
+                  fullScreenButton.addEventListener('click', () => {
+                      openFullscreen(videoElement);
+                  });
+                  videoWrapper.appendChild(fullScreenButton);
+
+                  // Botão para download
+                  const downloadButton = document.createElement('a');
+                  downloadButton.textContent = 'Download';
+                  downloadButton.className = 'custom-button download-button'; // Adicionando a classe download-button
+                  downloadButton.href = `https://drive.google.com/uc?export=download&id=${file.id}`;
+                  downloadButton.download = file.name;
+                  videoWrapper.appendChild(downloadButton);
+
+                  videosContainer.appendChild(videoWrapper);
+              });
+          });
+      }
+
+      function initClient() {
+          gapi.client.init({
+              apiKey: 'AIzaSyCEgwojalri9H7gFndTTCzfxBhG6dzq_3k',
+              discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+          }).then(() => {
+              document.getElementById('form').addEventListener('submit', event => {
+                  event.preventDefault();
+                  const dia = document.getElementById('dia').value;
+                  const horario = document.getElementById('horario').value;
+                  if (dia && horario) {
+                      
+                      const folderId = getFolderId(dia, horario);
+                      carregarVideos(folderId);
+                  } else {
+                      alert('Seleções incorretas. Por favor, escolha as opções corretas.');
+                  }
+              });
+          });
+      }
+
+      function handleClientLoad() {
+          gapi.load('client', initClient);
+      }
+
+      function getFolderId(dia, horario) {
+          const folders = {
+              'domingo_hora1': '1pmAEwqYNURlYYxi1Ic47FS9bF0Snl67f',
+              'domingo_hora2': '1iKcs_3OhKpqbTS_JR4vzyFK3XTw1-5Aq',
+              // Adicione todas as combinações de dia e horário aqui com seus respectivos folderId
+          };
+          return folders[`${dia}_${horario}`] || '';
+      }
+
+      function openFullscreen(element) {
+          if (element.requestFullscreen) {
+              element.requestFullscreen();
+          } else if (element.mozRequestFullScreen) { /* Firefox */
+              element.mozRequestFullScreen();
+          } else if (element.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+              element.webkitRequestFullscreen();
+          } else if (element.msRequestFullscreen) { /* IE/Edge */
+              element.msRequestFullscreen();
+          }
+      }
+  </script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="handleClientLoad()"></script>
+</body>
+</html>
