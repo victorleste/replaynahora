@@ -1,0 +1,191 @@
+/* Seu CSS aqui */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: #121212;
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    /* Remove scroll */
+}
+
+.container {
+    background-color: #fafafa;
+    border-radius: 10px;
+    margin: 8px;
+    width: 60%;
+    max-width: 800px; /* Ajusta largura para layout responsivo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(90deg, #03FE0B, #03b10c 100%);
+    padding: 6px;
+    text-align: center;
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.form {
+    padding: 6px;
+}
+
+.form-content {
+    margin-bottom: 6px;
+    position: relative;
+}
+
+.form-content label {
+    display: inline-block;
+    margin: 4px 0;
+    font-size: 12px;
+}
+
+.form-content select {
+    display: block;
+    width: 100%;
+    border-radius: 6px;
+    padding: 4px;
+    border: 1px solid #dfdfdf;
+    font-size: 12px;
+}
+
+.error-message {
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    visibility: hidden;
+    color: red;
+    font-size: 10px;
+}
+
+.form button {
+    background-color: #03FE0B;
+    color: white;
+    width: 100%;
+    border-radius: 10px;
+    padding: 8px;
+    border: 0;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.form-content.error select {
+    border-color: red;
+}
+
+.form-content a {
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    visibility: hidden;
+}
+
+.form-content.error a {
+    color: red;
+    visibility: visible;
+}
+
+.videos-container {
+    display: none; /* Oculto até o formulário ser enviado */
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.video {
+    background-color: #2c2c2c;
+    padding: 10px;
+    border-radius: 8px;
+    width: calc(50% - 8px); /* Deixa dois vídeos lado a lado */
+    box-sizing: border-box;
+    position: relative; /* Adicionado */
+}
+
+.video iframe {
+    width: 100%; /* Adicionado */
+    height: 100%; /* Adicionado */
+    border: none; /* Adicionado para remover a borda do iframe */
+    border-radius: 8px; /* Adicionado para manter o estilo de borda */
+    position: absolute; /* Adicionado */
+    top: 0; /* Adicionado */
+    left: 0; /* Adicionado */
+}
+
+
+.camera-title {
+    font-size: 11px;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+video {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Responsividade */
+@media (min-width: 600px) {
+    .content {
+        flex-direction: row;
+    }
+
+    .form {
+        flex: 1;
+    }
+
+    .videos-container {
+        flex: 2;
+        margin-left: 10px;
+    }
+}
+
+/* Estilos para o modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+
+   

@@ -1,0 +1,288 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    
+
+}
+
+body {
+    background-color: #000000fa;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.interface {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.flex {
+    display: flex;
+}
+
+header {
+    padding: 5px 2%;
+    font-size: 10px;
+}
+
+header > .interface {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header a {
+    color: aliceblue;
+    text-decoration: none;
+    display: inline-block;
+    transition: .2s;
+}
+
+header a:hover {
+    color: beige;
+    transform: scale(1.15);
+}
+
+header nav ul {
+    list-style-type: none;
+}
+
+header nav ul li {
+    display: inline-block;
+    padding: 0 40px;
+}
+
+header .btn-contato button {
+    padding: 5px 30px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 30px;
+    background-color: #03FE0B;
+    cursor: pointer;
+    border: 0;
+}
+
+header .btn-contato button:hover {
+    box-shadow: 0px 0px 8px #00ff08;
+}
+
+main .btn-contato2 button {
+    padding: 5px 30px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 30px;
+    background-color: #03FE0B;
+    cursor: pointer;
+    border: 0;
+}
+
+main .btn-contato2 button:hover {
+    box-shadow: 0px 0px 8px #00ff08;
+    transform: scale(1.15);
+}
+
+section.topo-do-site {
+    padding: 10px 4%;
+    height: 100vh;
+ 
+}
+
+section.topo-do-site .flex {
+    align-items: center;
+    justify-content: space-between;
+    gap: 90px;
+    height: 100%;
+}
+
+main .texto-topo h1 {
+    color: #fff;
+    font-size: 24px;
+    line-height: 1px;
+}
+
+main .texto-topo h1 span {
+    color: #03FE0B;
+}
+
+main .texto-topo p {
+    color: #fff;
+    margin: 40px 0;
+    font-size: 11px;
+}
+
+main .texto-topo .btn-contato button {
+    padding: 10px 10px;
+    font-weight: 700;
+    border-radius: 30px;
+    background-color: #03FE0B;
+    cursor: pointer;
+    width: 200px;
+    height: 35px;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main .texto-topo .btn-contato a {
+    text-decoration: none;
+}
+
+header .btn-contato button:hover {
+    box-shadow: 0px 0px 8px #00ff08;
+}
+
+main .texto-topo .btn-contato button:hover {
+    box-shadow: 0px 0px 8px #00ff08;
+    transform: scale(1.10);
+}
+
+.img-topo img {
+    width: 230px;
+    height: 250px;
+}
+
+@media (max-width: 800px) {
+    main .texto-topo h1 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 700px) {
+    .menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: transparent;
+        z-index: 999;
+        text-align: center;
+    }
+
+    main .btn-contato2 button {
+        padding: 5px 30px;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 30px;
+        background-color: #03FE0B;
+        cursor: pointer;
+        border: 0;
+    }
+
+    .menu.active {
+        display: flex;
+    }
+
+    .menu ul {
+        margin-top: 45px;
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+    }
+
+    .menu ul li {
+        padding: 15px 0;
+        width: 100%;
+        background-color: transparent;
+    }
+
+    .menu-toggle {
+        display: block;
+        cursor: pointer;
+        align-items: center;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+    }
+
+    .menu-toggle img {
+        width: 30px;
+        height: 30px;
+        margin-top: 25px;
+    }
+
+    .btn-contato {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .img-topo {
+        display: none;
+    }
+
+    main .texto-topo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        height: 100%;
+        justify-content: space-aro;
+        
+    }
+
+
+
+
+    main .texto-topo h1 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 415px) {
+    main .texto-topo h1 {
+        font-size: 16px;
+    }
+
+    main .texto-topo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        
+        
+    }
+
+}
+
+.menu ul {
+    text-align: right;
+}
+
+.menu ul li {
+    text-align: right;
+}
+
+@media (min-width: 700px) {
+    .menu-toggle {
+        display: none;
+    }
+}
+
+.topo-do-site .img-topo img {
+    width: 230px;
+    height: 250px;
+    position: relative;
+    animation: flutuar 2s ease-in-out infinite alternate;
+}
+
+@keyframes flutuar {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-20px);
+    }
+}
