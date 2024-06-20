@@ -21,7 +21,7 @@
       height: auto;
       border-radius: 5px;
       border: 2px solid black;
-      pointer-events: none; /* Impede qualquer interação com o iframe */
+      pointer-events: none; /* Impede qualquer interação com o iframe inicialmente */
     }
     .custom-button {
       background-color: black;
@@ -147,11 +147,13 @@
         videoElement.setAttribute('sandbox', 'allow-same-origin allow-scripts'); // Adicionando restrições de sandbox
         videoWrapper.appendChild(videoElement);
 
-        // Botão para abrir em tela cheia
+        // Botão para iniciar o vídeo e abrir em tela cheia
         const fullScreenButton = document.createElement('button');
         fullScreenButton.textContent = 'ASSISTIR REPLAY';
         fullScreenButton.className = 'custom-button'; // Adicionando a classe custom-button
         fullScreenButton.addEventListener('click', () => {
+          videoElement.style.pointerEvents = 'auto'; // Permitir interação com o iframe
+          videoElement.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); // Iniciar o vídeo
           openFullscreen(videoElement);
         });
         videoWrapper.appendChild(fullScreenButton);
