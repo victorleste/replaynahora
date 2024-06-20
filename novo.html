@@ -14,40 +14,45 @@
       box-sizing: border-box;
       padding: 10px;
       float: left;
+      position: relative;
     }
     .video-wrapper iframe {
       width: 100%;
       height: auto;
+      border-radius: 5px;
+      border: 2px solid black;
+      pointer-events: none; /* Impede qualquer interação com o iframe */
     }
     .custom-button {
-      background-color: #03FE0B;
+      background-color: black;
       color: #fff;
       border: none;
-      padding: 8px 10px;
-      font-size: 16px;
+      padding: 4px 10px;
+      font-size: 14px;
       cursor: pointer;
       border-radius: 4px;
-      margin-right: 8px;
+      margin-bottom: 8px;
     }
     .custom-button:hover {
       background-color: #0056b3;
     }
-    
-    /* Estilos para o botão de download */
     .download-button {
-      background-color: #03FE0B;
+      background-color: black;
       color: #fff;
       border: none;
       padding: 4px 8px;
-      font-size: 14px;
+      font-size: 12px;
       cursor: pointer;
       border-radius: 4px;
-      margin-right: 2px;
       text-decoration: none;
+      margin-left: 9px;
     }
-
     .download-button:hover {
       background-color: #0056b3;
+    }
+    .video-title {
+      font-weight: bold;
+      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -109,90 +114,108 @@
       </div>
       <div id="videos-container"></div>
     </div>
-
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script>
-      function carregarVideos(folderId) {
-          gapi.client.drive.files.list({
-              q: `'${folderId}' in parents and mimeType contains 'video/'`,
-              fields: 'files(id, name, webViewLink)',
-              pageSize: 200
-          }).then(response => {
-              const videosContainer = document.getElementById('videos-container');
-              videosContainer.innerHTML = '';
-              response.result.files.forEach(file => {
-                  const videoWrapper = document.createElement('div');
-                  videoWrapper.className = 'video-wrapper';
-                  const videoElement = document.createElement('iframe');
-                  videoElement.src = `https://drive.google.com/file/d/${file.id}/preview`;
-                  videoWrapper.appendChild(videoElement);
-                  
-                  // Botão para abrir em tela cheia
-                  const fullScreenButton = document.createElement('button');
-                  fullScreenButton.textContent = 'Assistir replay';
-                  fullScreenButton.addEventListener('click', () => {
-                      openFullscreen(videoElement);
-                  });
-                  videoWrapper.appendChild(fullScreenButton);
-
-                  // Botão para download
-                  const downloadButton = document.createElement('a');
-                  downloadButton.textContent = 'Download';
-                  downloadButton.className = 'custom-button download-button'; // Adicionando a classe download-button
-                  downloadButton.href = `https://drive.google.com/uc?export=download&id=${file.id}`;
-                  downloadButton.download = file.name;
-                  videoWrapper.appendChild(downloadButton);
-
-                  videosContainer.appendChild(videoWrapper);
-              });
-          });
-      }
-
-      function initClient() {
-          gapi.client.init({
-              apiKey: 'AIzaSyCEgwojalri9H7gFndTTCzfxBhG6dzq_3k',
-              discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-          }).then(() => {
-              document.getElementById('form').addEventListener('submit', event => {
-                  event.preventDefault();
-                  const dia = document.getElementById('dia').value;
-                  const horario = document.getElementById('horario').value;
-                  if (dia && horario) {
-                      
-                      const folderId = getFolderId(dia, horario);
-                      carregarVideos(folderId);
-                  } else {
-                      alert('Seleções incorretas. Por favor, escolha as opções corretas.');
-                  }
-              });
-          });
-      }
-
-      function handleClientLoad() {
-          gapi.load('client', initClient);
-      }
-
-      function getFolderId(dia, horario) {
-          const folders = {
-              'domingo_hora1': '1pmAEwqYNURlYYxi1Ic47FS9bF0Snl67f',
-              'domingo_hora2': '1iKcs_3OhKpqbTS_JR4vzyFK3XTw1-5Aq',
-              // Adicione todas as combinações de dia e horário aqui com seus respectivos folderId
-          };
-          return folders[`${dia}_${horario}`] || '';
-      }
-
-      function openFullscreen(element) {
-          if (element.requestFullscreen) {
-              element.requestFullscreen();
-          } else if (element.mozRequestFullScreen) { /* Firefox */
-              element.mozRequestFullScreen();
-          } else if (element.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-              element.webkitRequestFullscreen();
-          } else if (element.msRequestFullscreen) { /* IE/Edge */
-              element.msRequestFullscreen();
-          }
-      }
-  </script>
-  <script async defer src="https://apis.google.com/js/api.js" onload="handleClientLoad()"></script>
+  </div>
 </body>
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  function carregarVideos(folderId) {
+    gapi.client.drive.files.list({
+      q: `'${folderId}' in parents and mimeType contains 'video/'`,
+      fields: 'files(id, name, webViewLink)',
+      pageSize: 200
+    }).then(response => {
+      const videosContainer = document.getElementById('videos-container');
+      videosContainer.innerHTML = '';
+      response.result.files.forEach(file => {
+        const videoWrapper = document.createElement('div');
+        videoWrapper.className = 'video-wrapper';
+
+        // Extraindo a hora e o minuto do nome do arquivo
+        const nameParts = file.name.split('-');
+        const hour = nameParts[nameParts.length - 3];
+        const minute = nameParts[nameParts.length - 2];
+
+        // Título do vídeo
+        const videoTitle = document.createElement('div');
+        videoTitle.className = 'video-title';
+        videoTitle.textContent = `${hour}h${minute}m`;
+        videoWrapper.appendChild(videoTitle);
+
+        const videoElement = document.createElement('iframe');
+        videoElement.src = `https://drive.google.com/file/d/${file.id}/preview`;
+        videoElement.allowFullscreen = false; // Não permitir fullscreen
+        videoElement.setAttribute('sandbox', 'allow-same-origin allow-scripts'); // Adicionando restrições de sandbox
+        videoWrapper.appendChild(videoElement);
+
+        // Botão para abrir em tela cheia
+        const fullScreenButton = document.createElement('button');
+        fullScreenButton.textContent = 'ASSISTIR REPLAY';
+        fullScreenButton.className = 'custom-button'; // Adicionando a classe custom-button
+        fullScreenButton.addEventListener('click', () => {
+          openFullscreen(videoElement);
+        });
+        videoWrapper.appendChild(fullScreenButton);
+
+        // Botão para download
+        const downloadButton = document.createElement('a');
+        downloadButton.textContent = 'DOWNLOAD';
+        downloadButton.className = 'custom-button download-button'; // Adicionando a classe download-button
+        downloadButton.href = `https://drive.google.com/uc?export=download&id=${file.id}`;
+        downloadButton.download = file.name;
+        videoWrapper.appendChild(downloadButton);
+
+        videosContainer.appendChild(videoWrapper);
+      });
+    });
+  }
+
+  function initClient() {
+    gapi.client.init({
+      apiKey: 'AIzaSyCEgwojalri9H7gFndTTCzfxBhG6dzq_3k',
+      discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+    }).then(() => {
+      document.getElementById('form').addEventListener('submit', event => {
+        event.preventDefault();
+        const dia = document.getElementById('dia').value;
+        const horario = document.getElementById('horario').value;
+        if (dia && horario) {
+          const folderId = getFolderId(dia, horario);
+          carregarVideos(folderId);
+        } else {
+          alert('Seleções incorretas. Por favor, escolha as opções corretas.');
+        }
+      });
+    });
+  }
+
+  function handleClientLoad() {
+    gapi.load('client', initClient);
+  }
+
+  function getFolderId(dia, horario) {
+    const folders = {
+      'domingo_hora1': '1pmAEwqYNURlYYxi1Ic47FS9bF0Snl67f',
+      'domingo_hora2': '1iKcs_3OhKpqbTS_JR4vzyFK3XTw1-5Aq',
+      // Adicione todas as combinações de dia e horário aqui com seus respectivos folderId
+    };
+    return folders[`${dia}_${horario}`];
+  }
+
+  // Função para ativar o modo de tela cheia
+  function openFullscreen(elem) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    handleClientLoad();
+  });
+</script>
 </html>
